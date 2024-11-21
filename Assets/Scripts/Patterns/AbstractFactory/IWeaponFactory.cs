@@ -1,37 +1,35 @@
 using System.Collections.Generic;
 
 public interface IWeaponFactory {
-    public List<IAttachment> attachments { get; set; }
     public IWeapon CreateWeapon();
-    public IAttachment CreateWeaponAttachment();
+    public void AddAttachment(IAttachment attachment);
+
 }
 
 public class SniperFactory : IWeaponFactory {
-    public List<IAttachment> attachments { get; set; } = new ();
+    private Sniper sniper;
     public IWeapon CreateWeapon() {
-        return new Sniper();
-    }
-    public IAttachment CreateWeaponAttachment() {
-        Scope scope = new (){
-            ID = "Sniper Scope"
+        sniper = new Sniper() {
+            ID = "Sniper"
         };
-        scope.AssembleAttachment();
-        attachments.Add(scope);
-        return scope;
+        sniper.AssembleWeapon("Sniper");
+        return sniper;
+    }
+    public void AddAttachment(IAttachment attachment) {
+        sniper.Attachments.Add(attachment);
     }
 }
 
-public class SMGFactory : IWeaponFactory {
-    public List<IAttachment> attachments { get; set; } = new ();
+public class SmgFactory : IWeaponFactory {
+    private SMG smg;
     public IWeapon CreateWeapon() {
-        return new SMG();
-    }
-    public IAttachment CreateWeaponAttachment() {
-        Silencer silencer = new () {
-            ID = "SMG Silencer"
+        smg = new SMG() {
+            ID = "Light SMG"
         };
-        silencer.AssembleAttachment();
-        attachments.Add(silencer);
-        return silencer;
+        smg.AssembleWeapon("SMG");
+        return smg;
+    }
+    public void AddAttachment(IAttachment attachment) {
+        smg.Attachments.Add(attachment);
     }
 }
