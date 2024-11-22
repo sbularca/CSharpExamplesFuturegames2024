@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(CharacterController))]
 public class ControllerMovement : MonoBehaviour {
     [SerializeField] CharacterSettings characterSettings;
 

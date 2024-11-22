@@ -4,6 +4,7 @@ public class WalkingState : ICharacterState {
     private readonly ControllerMovement controllerMovement;
     private readonly InputHandler inputHandler;
     private readonly CharacterSettings settings;
+
     public WalkingState(ControllerMovement controllerMovement, InputHandler inputHandler, CharacterSettings settings) {
         this.controllerMovement = controllerMovement;
         this.inputHandler = inputHandler;
