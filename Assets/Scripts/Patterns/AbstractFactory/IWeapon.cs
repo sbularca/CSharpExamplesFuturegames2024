@@ -5,6 +5,8 @@ public interface IWeapon {
     public string ID { get; set; }
     public List<IAttachment> Attachments { get; }
     public void AssembleWeapon(string id);
+
+    public void TickWeapon() { }
 }
 
 public class Sniper : IWeapon {

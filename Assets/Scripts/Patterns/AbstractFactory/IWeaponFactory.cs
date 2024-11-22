@@ -3,7 +3,6 @@ using System.Collections.Generic;
 public interface IWeaponFactory {
     public IWeapon CreateWeapon();
     public void AddAttachment(IAttachment attachment);
-
 }
 
 public class SniperFactory : IWeaponFactory {
