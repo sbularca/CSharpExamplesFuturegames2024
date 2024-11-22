@@ -37,14 +37,20 @@ public class SingletonMonoBehaviour : MonoBehaviour {
     public static void SetInstance() {
         instance = Instance;
     }
-
-
+    
     public void DoSomething() { }
 }
 
 
-public class Player : MonoBehaviour {
+public class Player : MonoBehaviour, IService {
     private void Awake() {
-        SingletonMonoBehaviour.GetInstance().DoSomething();
+        // self-registering
+        ServiceLocator.Instance.RegisterService(this);
     }
+    public void Initialize() {
+        Debug.Log("Player initialized");
+    }
+    public void DoSomething() { }
+
+    public void Dispose() { }
 }
