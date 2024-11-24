@@ -1,15 +1,15 @@
 using UnityEngine;
 
 public class JumpingState : ICharacterState {
-    private readonly ControllerMovement controllerMovement;
+    private readonly PlayerMovement playerMovement;
     private readonly InputHandler inputHandler;
-    private readonly CharacterSettings settings;
+    private readonly PlayerMovementSettings settings;
     private readonly ICharacterState previousState;
     private float speed;
     private bool isReset;
 
-    public JumpingState(ControllerMovement controllerMovement, InputHandler inputHandler, CharacterSettings settings, ICharacterState previousState) {
-        this.controllerMovement = controllerMovement;
+    public JumpingState(PlayerMovement playerMovement, InputHandler inputHandler, PlayerMovementSettings settings, ICharacterState previousState) {
+        this.playerMovement = playerMovement;
         this.inputHandler = inputHandler;
         this.settings = settings;
         this.previousState = previousState;
@@ -27,14 +27,14 @@ public class JumpingState : ICharacterState {
 
     public void UpdateState() {
         if(!isReset) {
-            controllerMovement.velocity.y = settings.jumpVelocity;
+            playerMovement.velocity.y = settings.jumpVelocity;
             isReset = true;
         }
 
-        controllerMovement.MoveCharacter(speed);
+        playerMovement.MoveCharacter(speed);
 
-        if (controllerMovement.IsGrounded() && controllerMovement.velocity.y <= 0f) {
-            controllerMovement.SetState(new IdleState(controllerMovement, inputHandler, settings));
+        if (playerMovement.IsGrounded() && playerMovement.velocity.y <= 0f) {
+            playerMovement.SetState(new IdleState(playerMovement, inputHandler, settings));
         }
     }
 
