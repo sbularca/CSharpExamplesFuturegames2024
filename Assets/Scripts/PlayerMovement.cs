@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using ToolBox.Serialization;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -33,6 +34,9 @@ public class PlayerMovement : MonoBehaviour {
         }
     }
     private void LoadCurrentData() {
+        // EntitySettings entitySettings = DataSerializer.Load<EntitySettings>("player_data");
+        // LevelData levelData = DataSerializer.Load<LevelData>("level_data");
+
         CurrentPlayerData currentPlayerData = currentSavedData.currentPlayerData;
         playerSettings.entityName = currentPlayerData.entitySettings.name;
         playerSettings.health = currentPlayerData.entitySettings.health;
@@ -52,7 +56,7 @@ public class PlayerMovement : MonoBehaviour {
         }
     }
     private void SetDefaultData() {
-        currentSavedData.currentPlayerData.entitySettings = new CurrentPlayerSettings {
+        var entitySettings = new CurrentPlayerSettings {
             name = playerSettings.entityName,
             health = playerSettings.health,
             mana = playerSettings.mana,
@@ -62,13 +66,20 @@ public class PlayerMovement : MonoBehaviour {
             vitality = playerSettings.vitality,
             luck = playerSettings.luck
         };
+
         currentSavedData.currentPlayerData.entitySettings.startInventory = new List<IItem>(playerSettings.currentInventory.inventory);
         currentSavedData.currentPlayerData.entitySettings.startEquipment = new List<IItem>(playerSettings.currentEquipment.equipped);
+
+        currentSavedData.currentPlayerData.entitySettings = entitySettings;
         currentSavedData.currentPlayerData.position = new List<float> { characterController.transform.position.x, characterController.transform.position.y, characterController.transform.position.z };
 
         currentSavedData.levelData = new LevelData {
             sceneName = "Logic"
         };
+
+        // using Save System for Unity package with Odin Serializer
+        // DataSerializer.Save("player_data", currentSavedData.currentPlayerData);
+        // DataSerializer.Save("level_data", currentSavedData.levelData);
     }
 
     private void Start() {
