@@ -3,9 +3,9 @@ using UnityEngine;
 public class IdleState : ICharacterState {
     private readonly InputHandler inputHandler;
     private readonly CharacterSettings settings;
-    private readonly ControllerMovement controllerMovement;
-    public IdleState(ControllerMovement controllerMovement, InputHandler inputHandler, CharacterSettings settings) {
-        this.controllerMovement = controllerMovement;
+    private readonly PlayerMovement controllerMovementReference;
+    public IdleState(PlayerMovement controllerMovementReference, InputHandler inputHandler, CharacterSettings settings) {
+        this.controllerMovementReference = controllerMovementReference;
         this.inputHandler = inputHandler;
         this.settings = settings;
     }
@@ -15,15 +15,15 @@ public class IdleState : ICharacterState {
     }
 
     public void UpdateState() {
-        controllerMovement.velocity.x = 0f;
-        controllerMovement.velocity.z = 0f;
+        controllerMovementReference.velocity.x = 0f;
+        controllerMovementReference.velocity.z = 0f;
 
-        if (inputHandler.IsJumping && controllerMovement.IsGrounded()) {
-            controllerMovement.SetState(new JumpingState(controllerMovement, inputHandler, settings, this));
+        if (inputHandler.IsJumping && controllerMovementReference.IsGrounded()) {
+            controllerMovementReference.SetState(new JumpingState(controllerMovementReference, inputHandler, settings, this));
         }
 
         if (inputHandler.MovementData != Vector2.zero) {
-            controllerMovement.SetState(new WalkingState(controllerMovement, inputHandler, settings));
+            controllerMovementReference.SetState(new WalkingState(controllerMovementReference, inputHandler, settings));
         }
     }
     public void ExitState() { }

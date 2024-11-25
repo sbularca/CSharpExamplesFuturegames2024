@@ -1,22 +1,26 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(CharacterController))]
-public class ControllerMovement : MonoBehaviour {
-    [SerializeField] CharacterSettings characterSettings;
+public class PlayerMovement {
+    private readonly CharacterSettings characterSettings;
+    private readonly CharacterController characterController;
 
-    private CharacterController characterController;
-    private ICharacterState currentState;
-    private InputHandler inputHandler;
+    public PlayerMovement(CharacterSettings characterSettings, CharacterController characterController) {
+        this.characterSettings = characterSettings;
+        this.characterController = characterController;
+    }
 
-    private bool isRotating;
+    // TODO: this variable to exist in a different place like a data class
     public Vector3 velocity;
 
-    private void Start() {
+    private ICharacterState currentState;
+    private InputHandler inputHandler;
+    private bool isRotating;
+
+    public void Initialize() {
         inputHandler = new InputHandler();
         inputHandler.RegisterPlayerInput();
 
-        characterController = GetComponent<CharacterController>();
         SetState(new IdleState(this, inputHandler, characterSettings));
 
         velocity = Vector3.zero;
@@ -37,7 +41,7 @@ public class ControllerMovement : MonoBehaviour {
 
     public void MoveCharacter(float speed) {
         Vector3 moveInput = new Vector3(inputHandler.MovementData.x, 0f, inputHandler.MovementData.y).normalized;
-        Vector3 moveDirection = transform.TransformDirection(moveInput) * speed;
+        Vector3 moveDirection = characterController.transform.TransformDirection(moveInput) * speed;
         velocity.x = moveDirection.x;
         velocity.z = moveDirection.z;
     }
@@ -55,7 +59,7 @@ public class ControllerMovement : MonoBehaviour {
         }
 
         Vector3 rotation = new Vector3(0f, inputHandler.LookData.x * characterSettings.rotationSpeed, 0f);
-        transform.Rotate(rotation * Time.deltaTime);
+        characterController.transform.Rotate(rotation * Time.deltaTime);
     }
 
     public bool IsGrounded() {
@@ -69,7 +73,7 @@ public class ControllerMovement : MonoBehaviour {
         currentState = newState;
     }
 
-    private void OnDestroy() {
+    private void OnDispose() {
         inputHandler.Dispose();
     }
 }
