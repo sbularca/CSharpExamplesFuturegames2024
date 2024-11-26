@@ -15,6 +15,6 @@ public class WeaponAssembler : MonoBehaviour {
         SniperFactory sniperFactory = new ();
         IWeapon sniper = sniperFactory.CreateWeapon();
         var decoratedSniper = new ScopeDecorator(new SilencerDecorator(sniper));
-        Debug.Log(decoratedSniper.Attachments.Count);
+        //Debug.Log(decoratedSniper.Attachments.Count);
     }
 }

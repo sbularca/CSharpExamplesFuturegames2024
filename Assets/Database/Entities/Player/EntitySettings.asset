@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d035a155b92b4b1ea2c718fe2cfe8bf3, type: 3}
+  m_Name: EntitySettings
+  m_EditorClassIdentifier: 
+  entityName: Player 1
+  health: 100
+  mana: 100
+  strength: 10
+  dexterity: 10
+  intelligence: 10
+  vitality: 10
+  luck: 10
+  currentInventory: {fileID: 11400000, guid: e05852076f9761b4fb8e0ec62ca7c68a, type: 2}
+  currentEquipment: {fileID: 11400000, guid: 09f293fc4e3b2f84eb5605171426fc15, type: 2}
