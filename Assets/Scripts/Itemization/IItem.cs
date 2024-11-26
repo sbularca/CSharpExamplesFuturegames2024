@@ -1,8 +1,4 @@
 ﻿using System;
-using UnityEngine;
-public class Item : ScriptableObject, IItem {
-    public ItemBaseStats baseStats = new();
-}
 
 public interface IItem { }
 

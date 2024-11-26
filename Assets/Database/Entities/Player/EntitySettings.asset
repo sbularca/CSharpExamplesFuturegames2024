@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d035a155b92b4b1ea2c718fe2cfe8bf3, type: 3}
   m_Name: EntitySettings
   m_EditorClassIdentifier: 
-  name: Player 1
+  entityName: Player 1
   health: 100
   mana: 100
   strength: 10
@@ -20,5 +20,5 @@ MonoBehaviour:
   intelligence: 10
   vitality: 10
   luck: 10
-  currentInventory: {fileID: 11400000, guid: 3cca78a4a66d5fe408d552fa66be0d44, type: 2}
+  currentInventory: {fileID: 11400000, guid: e05852076f9761b4fb8e0ec62ca7c68a, type: 2}
   currentEquipment: {fileID: 11400000, guid: 09f293fc4e3b2f84eb5605171426fc15, type: 2}

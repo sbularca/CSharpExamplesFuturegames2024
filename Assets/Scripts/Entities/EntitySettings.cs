@@ -15,5 +15,4 @@ public class EntitySettings : ScriptableObject {
 
     [Header("Inventory & Equipment")]
     public Inventory currentInventory;
-    public Inventory currentEquipment;
 }

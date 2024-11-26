@@ -10,7 +10,7 @@ public class CurrentSavedData {
 
 [Serializable]
 public class LevelData {
-    public string sceneName;
+    public string timeAndDate;
 }
 
 [Serializable]

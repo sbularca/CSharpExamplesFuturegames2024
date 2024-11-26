@@ -27,13 +27,15 @@ public class JumpingState : ICharacterState {
 
     public void UpdateState() {
         if(!isReset) {
-            playerMovement.velocity.y = settings.jumpVelocity;
+            var velocity = playerMovement.Velocity;
+            velocity.y = settings.jumpVelocity;
+            playerMovement.Velocity = velocity;
             isReset = true;
         }
 
         playerMovement.MoveCharacter(speed);
 
-        if (playerMovement.IsGrounded() && playerMovement.velocity.y <= 0f) {
+        if (playerMovement.IsGrounded() && playerMovement.Velocity.y <= 0f) {
             playerMovement.SetState(new IdleState(playerMovement, inputHandler, settings));
         }
     }

@@ -1,27 +1,50 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using ToolBox.Serialization;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(CharacterController))]
-public class PlayerMovement : MonoBehaviour {
-    [SerializeField] PlayerMovementSettings playerMovementSettings;
-    [SerializeField] private EntitySettings playerSettings;
+public class PlayerMovement {
+    private readonly PlayerMovementReference playerPrefab;
+    private readonly InputHandler inputHandler;
 
-    private CharacterController characterController;
-    private ICharacterState currentState;
-    private InputHandler inputHandler;
-
-    private bool isRotating;
-
-    [HideInInspector]
-    public Vector3 velocity;
+    private PlayerMovementReference playerMovementReference;
+    private EntitySettings playerSettings;
+    private PlayerMovementSettings movementSettings;
 
     private CurrentSavedData currentSavedData;
+    private CharacterController characterController;
+    private ICharacterState currentState;
+    private bool isRotating;
+    private Vector3 velocity;
 
-    private void Awake() {
-        characterController = GetComponent<CharacterController>();
+    public Vector3 Velocity {
+        get => velocity;
+        set => velocity = value;
+    }
+
+    public PlayerMovement(PlayerMovementReference playerPrefab, InputHandler inputHandler) {
+        this.playerPrefab = playerPrefab;
+        this.inputHandler = inputHandler;
+    }
+
+    public void Initialize() {
+        playerMovementReference  = Object.Instantiate(playerPrefab);
+        movementSettings = playerMovementReference.playerMovementSettings;
+        playerSettings = playerMovementReference.playerSettings;
+        characterController = playerMovementReference.GetComponent<CharacterController>();
+
+        inputHandler.RegisterPlayerInput();
+
+        LoadPlayerSavedData();
+        characterController.transform.position = new Vector3(
+            currentSavedData.currentPlayerData.position[0],
+            currentSavedData.currentPlayerData.position[1],
+            currentSavedData.currentPlayerData.position[2]);
+
+        SetState(new IdleState(this, inputHandler, movementSettings));
+        velocity = Vector3.zero;
+    }
+    private void LoadPlayerSavedData() {
         currentSavedData = SimpleSaveLoad.Instance.LoadData("saveData01");
         if (string.IsNullOrEmpty(currentSavedData.currentPlayerData.entitySettings.name)) {
             Debug.Log("No player name found. Creating new player with default settings.");
@@ -33,6 +56,33 @@ public class PlayerMovement : MonoBehaviour {
             LoadCurrentData();
         }
     }
+
+    private void SetDefaultData() {
+        var entitySettings = new CurrentPlayerSettings {
+            name = playerSettings.entityName,
+            health = playerSettings.health,
+            mana = playerSettings.mana,
+            strength = playerSettings.strength,
+            dexterity = playerSettings.dexterity,
+            intelligence = playerSettings.intelligence,
+            vitality = playerSettings.vitality,
+            luck = playerSettings.luck
+        };
+
+        currentSavedData.currentPlayerData.entitySettings.startInventory = new List<IItem>(playerSettings.currentInventory.inventory);
+
+        currentSavedData.currentPlayerData.entitySettings = entitySettings;
+        currentSavedData.currentPlayerData.position = new List<float> { 0f, 1f, 0f };
+
+        currentSavedData.levelData = new LevelData {
+            timeAndDate = "2024-11-26"
+        };
+
+        // using Save System for Unity package with Odin Serializer
+        // DataSerializer.Save("player_data", currentSavedData.currentPlayerData);
+        // DataSerializer.Save("level_data", currentSavedData.levelData);
+    }
+
     private void LoadCurrentData() {
         // EntitySettings entitySettings = DataSerializer.Load<EntitySettings>("player_data");
         // LevelData levelData = DataSerializer.Load<LevelData>("level_data");
@@ -50,53 +100,14 @@ public class PlayerMovement : MonoBehaviour {
         foreach(Item item in currentPlayerData.entitySettings.startInventory.Cast<Item>()) {
             playerSettings.currentInventory.inventory.Add(item);
         }
-
-        foreach(Item item in currentPlayerData.entitySettings.startEquipment.Cast<Item>()) {
-            playerSettings.currentEquipment.equipped.Add(item);
-        }
-    }
-    private void SetDefaultData() {
-        var entitySettings = new CurrentPlayerSettings {
-            name = playerSettings.entityName,
-            health = playerSettings.health,
-            mana = playerSettings.mana,
-            strength = playerSettings.strength,
-            dexterity = playerSettings.dexterity,
-            intelligence = playerSettings.intelligence,
-            vitality = playerSettings.vitality,
-            luck = playerSettings.luck
-        };
-
-        currentSavedData.currentPlayerData.entitySettings.startInventory = new List<IItem>(playerSettings.currentInventory.inventory);
-        currentSavedData.currentPlayerData.entitySettings.startEquipment = new List<IItem>(playerSettings.currentEquipment.equipped);
-
-        currentSavedData.currentPlayerData.entitySettings = entitySettings;
-        currentSavedData.currentPlayerData.position = new List<float> { characterController.transform.position.x, characterController.transform.position.y, characterController.transform.position.z };
-
-        currentSavedData.levelData = new LevelData {
-            sceneName = "Logic"
-        };
-
-        // using Save System for Unity package with Odin Serializer
-        // DataSerializer.Save("player_data", currentSavedData.currentPlayerData);
-        // DataSerializer.Save("level_data", currentSavedData.levelData);
     }
 
-    private void Start() {
-        inputHandler = new InputHandler();
-        inputHandler.RegisterPlayerInput();
-
-        SetState(new IdleState(this, inputHandler, playerMovementSettings));
-        characterController.transform.position = new Vector3(currentSavedData.currentPlayerData.position[0], currentSavedData.currentPlayerData.position[1], currentSavedData.currentPlayerData.position[2]);
-        velocity = Vector3.zero;
-    }
-
-    private void Update() {
+    public void Tick() {
         currentState.UpdateState();
         RotateCharacter();
 
         if(!IsGrounded()) {
-            velocity.y -= playerMovementSettings.gravity * Time.deltaTime;
+            velocity.y -= movementSettings.gravity * Time.deltaTime;
         }
         else if(velocity.y <= 0) {
             velocity.y = -2f;
@@ -106,7 +117,7 @@ public class PlayerMovement : MonoBehaviour {
 
     public void MoveCharacter(float speed) {
         Vector3 moveInput = new Vector3(inputHandler.MovementData.x, 0f, inputHandler.MovementData.y).normalized;
-        Vector3 moveDirection = transform.TransformDirection(moveInput) * speed;
+        Vector3 moveDirection = characterController.transform.TransformDirection(moveInput) * speed;
         velocity.x = moveDirection.x;
         velocity.z = moveDirection.z;
     }
@@ -123,8 +134,8 @@ public class PlayerMovement : MonoBehaviour {
             return;
         }
 
-        Vector3 rotation = new Vector3(0f, inputHandler.LookData.x * playerMovementSettings.rotationSpeed, 0f);
-        transform.Rotate(rotation * Time.deltaTime);
+        Vector3 rotation = new Vector3(0f, inputHandler.LookData.x * movementSettings.rotationSpeed, 0f);
+        characterController.transform.Rotate(rotation * Time.deltaTime);
     }
 
     public bool IsGrounded() {
@@ -154,7 +165,6 @@ public class PlayerMovement : MonoBehaviour {
         currentSavedData.currentPlayerData.entitySettings.vitality = playerSettings.vitality;
         currentSavedData.currentPlayerData.entitySettings.luck = playerSettings.luck;
         currentSavedData.currentPlayerData.entitySettings.startInventory = new List<IItem>(playerSettings.currentInventory.inventory);
-        currentSavedData.currentPlayerData.entitySettings.startEquipment = new List<IItem>(playerSettings.currentEquipment.equipped);
-        currentSavedData.levelData.sceneName = "Logic";
+        currentSavedData.levelData.timeAndDate = System.DateTime.Now.ToString("yyyy-MM-dd");
     }
 }
