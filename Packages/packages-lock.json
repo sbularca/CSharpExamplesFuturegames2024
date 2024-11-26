@@ -1,9 +1,9 @@
 {
   "dependencies": {
     "com.intothedev.savesystem": {
-      "version": "file:C:/Users/sebastian.bularca/Documents/Save-System-for-Unity",
+      "version": "file:Save-System-for-Unity",
       "depth": 0,
-      "source": "local",
+      "source": "embedded",
       "dependencies": {}
     },
     "com.unity.ai.navigation": {
