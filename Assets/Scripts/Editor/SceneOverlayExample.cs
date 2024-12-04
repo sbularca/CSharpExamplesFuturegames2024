@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 [InitializeOnLoad]
 public static class SceneOverlayExample {
     static SceneOverlayExample() {
-        SceneView.duringSceneGui += OnSceneGUI;
+        //SceneView.duringSceneGui += OnSceneGUI;
     }
 
     static void OnSceneGUI(SceneView sceneView) {
@@ -22,7 +22,7 @@ public static class SceneOverlayExample {
         Handles.EndGUI();
     }
 
-    [MenuItem("File/Save All Open Scenes %#&s")] // Shortcut: Ctrl+Shift+Alt+S
+    [MenuItem("ExampleTools/Save All Open Scenes %#&s")] // Shortcut: Ctrl+Shift+Alt+S
     public static void SaveAllScenes() {
         int sceneCount = SceneManager.sceneCount;
         bool allSaved = true;

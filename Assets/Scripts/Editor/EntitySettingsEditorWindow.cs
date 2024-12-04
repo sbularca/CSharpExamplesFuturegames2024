@@ -5,14 +5,14 @@ public class EntitySettingsEditorWindow : EditorWindow {
     private EntitySettings entitySettings;
     private SerializedObject serializedEntitySettings;
     private Vector2 scrollPosition;
+    private static EntitySettingsEditorWindow window;
 
-    [MenuItem("Tools/Entity Settings Editor")]
+    [MenuItem("ExampleTools/Entity Settings Editor")]
     public static void ShowWindow() {
-        GetWindow<EntitySettingsEditorWindow>("Entity Settings Editor");
+        window ??= GetWindow<EntitySettingsEditorWindow>("Entity Settings Editor");
     }
 
     private void OnEnable() {
-        // Create a new instance or keep the existing one
         if(entitySettings == null) {
             CreateNewEntitySettings();
         }
