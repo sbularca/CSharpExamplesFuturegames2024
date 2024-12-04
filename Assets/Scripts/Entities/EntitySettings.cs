@@ -3,7 +3,7 @@ using UnityEngine.Serialization;
 
 [CreateAssetMenu(fileName = "EntitySettings", menuName = "Examples/Entity Settings")]
 public class EntitySettings : ScriptableObject {
-    [FormerlySerializedAs("name")] [Header("Base Stats")]
+    [Header("Base Stats")]
     public string entityName;
     public int health;
     public int mana;

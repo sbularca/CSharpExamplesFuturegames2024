@@ -16,6 +16,6 @@ public static class EditorToolsMenu {
         foreach(string scene in scenesToLoadInOrder) {
             EditorSceneManager.OpenScene($"{path}/{scene}.unity", OpenSceneMode.Additive);
         }
-        SceneManager.SetActiveScene(SceneManager.GetSceneByName(scenesToLoadInOrder[3]));
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName(scenesToLoadInOrder[2]));
     }
 }

@@ -21,4 +21,3 @@ MonoBehaviour:
   vitality: 10
   luck: 10
   currentInventory: {fileID: 11400000, guid: e05852076f9761b4fb8e0ec62ca7c68a, type: 2}
-  currentEquipment: {fileID: 11400000, guid: 09f293fc4e3b2f84eb5605171426fc15, type: 2}

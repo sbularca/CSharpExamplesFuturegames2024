@@ -9,8 +9,9 @@ public class GameController : MonoBehaviour {
     private bool initialized;
 
     public void Initialize() {
+        var spawnPoint = FindFirstObjectByType<PlayerSpawnPoint>();
         inputHandler = new InputHandler();
-        playerMovement = new PlayerMovement(playerData.playerReferencePrefab, inputHandler);
+        playerMovement = new PlayerMovement(playerData.playerReferencePrefab, inputHandler, spawnPoint);
         playerMovement.Initialize();
         initialized = true;
     }

@@ -17,3 +17,7 @@ MonoBehaviour:
   rotationSpeed: 20
   jumpVelocity: 3
   gravity: 9.81
+  trailSettings:
+    color: {r: 0, g: 0, b: 0, a: 0}
+    width: 20
+    length: 20

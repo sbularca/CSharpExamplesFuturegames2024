@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Art/UIToolkit/button.uss?fileID=7433441132597879392&amp;guid=9af74d19c0d65bf429ade6ae755e357f&amp;type=3#button" />
+    <ui:VisualElement name="uibar" style="flex-grow: 1; flex-direction: row; width: 100%; height: 70px; background-color: rgba(0, 0, 0, 0.65); align-self: auto; align-items: auto; align-content: auto; position: absolute;">
+        <ui:Button text="Kill Me!" name="button_kill" style="justify-content: flex-start; align-items: flex-start; align-self: center; align-content: flex-start; width: 179px; height: 48px; bottom: auto; top: auto; right: auto; left: auto; -unity-text-align: middle-center; font-size: 31px; -unity-font-style: bold;" />
+    </ui:VisualElement>
+</ui:UXML>

@@ -4,10 +4,11 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerMovement {
-    private readonly PlayerMovementReference playerPrefab;
+    private readonly PlayerReference playerPrefab;
     private readonly InputHandler inputHandler;
+    private readonly PlayerSpawnPoint spawnPoint;
 
-    private PlayerMovementReference playerMovementReference;
+    private PlayerReference playerReference;
     private EntitySettings playerSettings;
     private PlayerMovementSettings movementSettings;
 
@@ -22,24 +23,28 @@ public class PlayerMovement {
         set => velocity = value;
     }
 
-    public PlayerMovement(PlayerMovementReference playerPrefab, InputHandler inputHandler) {
+    public PlayerMovement(PlayerReference playerPrefab, InputHandler inputHandler, PlayerSpawnPoint spawnPoint) {
         this.playerPrefab = playerPrefab;
         this.inputHandler = inputHandler;
+        this.spawnPoint = spawnPoint;
     }
 
     public void Initialize() {
-        playerMovementReference  = Object.Instantiate(playerPrefab);
-        movementSettings = playerMovementReference.playerMovementSettings;
-        playerSettings = playerMovementReference.playerSettings;
-        characterController = playerMovementReference.GetComponent<CharacterController>();
+        playerReference  = Object.Instantiate(playerPrefab);
+        movementSettings = playerReference.playerMovementSettings;
+        playerSettings = playerReference.playerSettings;
+        characterController = playerReference.GetComponent<CharacterController>();
 
         inputHandler.RegisterPlayerInput();
 
         LoadPlayerSavedData();
-        characterController.transform.position = new Vector3(
-            currentSavedData.currentPlayerData.position[0],
-            currentSavedData.currentPlayerData.position[1],
-            currentSavedData.currentPlayerData.position[2]);
+        // characterController.transform.position = new Vector3(
+        //     currentSavedData.currentPlayerData.position[0],
+        //     currentSavedData.currentPlayerData.position[1],
+        //     currentSavedData.currentPlayerData.position[2]);
+
+        playerReference.transform.position = spawnPoint.transform.position;
+        playerReference.transform.rotation = spawnPoint.transform.rotation;
 
         SetState(new IdleState(this, inputHandler, movementSettings));
         velocity = Vector3.zero;
