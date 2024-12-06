@@ -5,11 +5,10 @@ public class EntitySettingsEditorWindow : EditorWindow {
     private EntitySettings entitySettings;
     private SerializedObject serializedEntitySettings;
     private Vector2 scrollPosition;
-    private static EntitySettingsEditorWindow window;
 
     [MenuItem("ExampleTools/Entity Settings Editor")]
     public static void ShowWindow() {
-        window ??= GetWindow<EntitySettingsEditorWindow>("Entity Settings Editor");
+        var window = GetWindow<EntitySettingsEditorWindow>("Entity Settings Editor");
     }
 
     private void OnEnable() {
